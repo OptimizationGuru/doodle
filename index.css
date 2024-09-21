@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* index.css */
+.font-dynamic {
+  font-family: Arial, sans-serif; /* Replace with desired font-family */
+}
