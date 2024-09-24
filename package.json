@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dom-to-image": "^2.6.0",
+    "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "react": "^18.3.1",
     "react-colorful": "^5.6.1",

@@ -1,15 +1,15 @@
-// Canvas.js
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import Dropdown from './Dropdown'
-import { BiSolidColorFill } from 'react-icons/bi'
-import { MdOutlinePhotoSizeSelectActual } from 'react-icons/md'
-import { LuUploadCloud } from 'react-icons/lu'
+import { BiSolidColorFill, MdOutlinePhotoSizeSelectActual, LuUploadCloud } from '../utils/icons'
 import Fonts from '../Fonts'
 import { allFontSizes } from '../constant'
 import { BannerStyleContext } from './BannerStyle'
-import html2canvas from 'html2canvas'
-import { HexColorPicker } from 'react-colorful'
-import ColorPicker from '../utils/ColorPicker'
+import { downloadCanvas, downloadDOMImage, downloadPngImage } from '../utils/downloadCanvas'
+import { uploadImage } from '../utils/imageUpload'
+import { resizeTextArea } from '../utils/resizeTextArea'
+import FontColorPicker from '../utils/FontColorPicker'
+import BgShadePicker from '../utils/BgColorPicker'
+import YourComponent from './TextComponent'
 
 const Canvas = () => {
   const [text, setText] = useState('Write your content here')
@@ -21,32 +21,17 @@ const Canvas = () => {
 
   const { fontSize, fontStyle, fontColor, bgColor } = useContext(BannerStyleContext)
 
-  const handleDownload = () => {
-    const canvasElement = document.getElementById('canvas-container') // The div wrapping your canvas.
-    html2canvas(canvasElement).then((canvas) => {
-      const link = document.createElement('a')
-      link.download = 'canvas-image.png'
-      link.href = canvas.toDataURL()
-      link.click()
-    })
-  }
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
-    const reader = new FileReader()
-    reader.onload = function (event) {
-      const imgElement = new Image()
-      imgElement.src = event.target.result
-      document.getElementById('canvas-container').appendChild(imgElement)
-    }
-    reader.readAsDataURL(file)
-  }
+  const bgPickerRef = useRef(null)
+  const textPickerRef = useRef(null)
 
+  const handleImgDownload = () => {
+    downloadDOMImage('canvas-container')
+  }
+  const handleImgUpload = (e) => {
+    uploadImage(e)
+  }
   const autoResize = () => {
-    const textarea = document.getElementById('textarea')
-    if (textarea) {
-      textarea.style.height = 'auto'
-      textarea.style.height = `${textarea.scrollHeight}px`
-    }
+    resizeTextArea('textarea')
   }
 
   const toggleTextColorPicker = () => {
@@ -56,6 +41,25 @@ const Canvas = () => {
   const toggleBgColorPicker = () => {
     showBgShadePicker(!bgShadePicker)
   }
+
+  const handleClickOutside = (e) => {
+    if (
+      bgPickerRef.current &&
+      !bgPickerRef.current.contains(e.target) &&
+      textPickerRef.current &&
+      !textPickerRef.current.contains(e.target)
+    ) {
+      showBgShadePicker(false)
+      showTextShadePicker(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchFonts = async () => {
@@ -71,8 +75,6 @@ const Canvas = () => {
   }, [])
 
   useEffect(() => {
-    console.log(fontSize, fontStyle, ' fontsize, fontStyle')
-
     autoResize()
   }, [text])
 
@@ -112,14 +114,19 @@ const Canvas = () => {
       </div>
 
       <div className='w-[600px] h-[50px] flex justify-center items-center py-1 gap-4'>
-        <div className='h-[40px] w-[50px] -mt-2'>
-          <button
-            onClick={toggleTextColorPicker}
-            className='text-white text-lg font-medium shadow-xl px-3 rounded-md border-white border-[1px] h-full bg-black'
-          >
+        <div
+          className='h-[40px] w-[50px] -mt-2 relative'
+          onClick={toggleTextColorPicker}
+          ref={textPickerRef}
+        >
+          <button className='text-white text-lg font-medium shadow-xl px-3 rounded-md border-white border-[1px] h-full bg-black'>
             A
           </button>
-          {textShadePicker && <ColorPicker utility={'textColor'} onClick={toggleTextColorPicker} />}
+          {textShadePicker && (
+            <div className='mt-4 absolute'>
+              <FontColorPicker />
+            </div>
+          )}
         </div>
 
         <div className='w-[200px] h-[50px] flex justify-start rounded-none py-2 -mt-1'>
@@ -130,20 +137,32 @@ const Canvas = () => {
           {fonts && <Dropdown width={200} data={allFontSizes} type={'Choose font-size'} />}
         </div>
 
-        <div className='h-[40px] w-[100px] -mt-2 -mr-1'>
+        <div className='h-[40px] w-[100px] -mt-2 -mr-1 relative'>
+          <div>
+            <input
+              type='file'
+              onChange={(e) => handleImgUpload(e)}
+              className='text-white absolute inset-0 opacity-0 cursor-pointer'
+            />
+          </div>
           <button className='text-white text-2xl font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'>
             <LuUploadCloud />
           </button>
         </div>
 
-        <div className='h-[40px] w-[100px] -mt-2 -mx-1'>
+        <div className='h-[40px] w-[100px] -mt-2 -mx-1 relative' ref={bgPickerRef}>
           <button
             onClick={toggleBgColorPicker}
             className='text-white text-2xl font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'
           >
             <BiSolidColorFill />
           </button>
-          {bgShadePicker && <ColorPicker utility={'bannerColor'} onClick={toggleBgColorPicker} />}
+
+          {bgShadePicker && (
+            <div className='mt-4 absolute' onClick={toggleBgColorPicker}>
+              <BgShadePicker />
+            </div>
+          )}
         </div>
 
         <div className='h-[40px] w-[100px] -mt-2 -ml-1'>
@@ -152,9 +171,10 @@ const Canvas = () => {
           </button>
         </div>
       </div>
+
       <div
         id='canvas-container'
-        className='bg-red-500 flex items-center justify-center overflow-auto'
+        className=' flex items-center justify-center overflow-auto'
         style={{ width: `${width}px`, height: `${height}px` }}
       >
         <textarea
@@ -165,20 +185,20 @@ const Canvas = () => {
             fontFamily: fontStyle || 'Arial',
             color: fontColor || '#000000',
             backgroundColor: bgColor || 'transparent',
+            width: `${width}px`,
+            height: `${height}px`,
           }}
-          className='w-full font-bold text-white text-center px-8 py-4 outline-none border-none resize-none bg-red-500'
+          className='font-bold text-white text-center px-8 py-24 overflow-auto outline-none border-none resize-none bg-red-500'
           onChange={(e) => {
             setText(e.target.value)
             autoResize()
           }}
         />
       </div>
-      <div>
-        <input type='file' onChange={handleImageUpload} className='text-white' />
-      </div>
+
       <button
-        onClick={handleDownload}
-        className='text-white text-2xl my-4 font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'
+        onClick={handleImgDownload}
+        className='text-white text-2xl my-2 font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'
       >
         Download
       </button>

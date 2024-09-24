@@ -6,7 +6,7 @@ const BannerStyle = ({ children }) => {
   const [fontSize, setFontSize] = useState('24')
   const [fontStyle, setFontStyle] = useState('sans-serif')
   const [fontColor, setFontColor] = useState('black')
-  const [bgColor, setBgColor] = useState('blue')
+  const [bgColor, setBgColor] = useState('white')
 
   const toggleStyle = ({ size, family, textColor, newBgColor }) => {
     if (size) setFontSize(size)
