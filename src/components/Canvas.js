@@ -36,9 +36,9 @@ const Canvas = () => {
   const handleImgUpload = (e) => {
     uploadImage(e)
   }
-  const autoResize = () => {
-    resizeTextArea('textarea')
-  }
+  // const autoResize = () => {
+  //   resizeTextArea('textarea')
+  // }
 
   const toggleTextColorPicker = () => {
     showTextShadePicker(!textShadePicker)
@@ -79,12 +79,9 @@ const Canvas = () => {
     toggleStyle({ style: style })
   }
 
-  const handleFontFamilySelect = (newfamily) => {
-    console.log(familyFont, 'prev')
-    setCurrentFamilyFont(newfamily)
-    toggleStyle({ family: newfamily })
-    setRefresh((prev) => ++prev)
-    console.log(familyFont, 'updated')
+  const handleFontFamilySelect = (font) => {
+    setCurrentFamilyFont(font)
+    toggleStyle({ family: font })
   }
 
   useEffect(() => {
@@ -94,9 +91,9 @@ const Canvas = () => {
     }
   }, [])
 
-  useEffect(() => {
-    autoResize()
-  }, [text])
+  // useEffect(() => {
+  //   autoResize()
+  // }, [text])
 
   return (
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
@@ -182,17 +179,17 @@ const Canvas = () => {
 
       <div
         id='canvas-container'
-        className='flex items-center justify-center overflow-auto w-full h-full  border-white border-[1px]'
-        style={{ width: width ? `${width}px` : '700px', height: height ? `${height}px` : '700px' }}
+        className='flex items-center justify-center overflow-auto w-full h-full  '
+        style={{ width: width ? `${width}px` : '842px', height: height ? `${height}px` : '595px' }}
       >
         <textarea
           id='textarea'
           key={refresh}
           value={text}
           style={{
+            fontFamily: 'ABeeZee',
             fontSize: `${fontSize}`,
             fontStyle: fontStyle,
-            fontfamily: 'sans-serif',
             color: fontColor || '#000000',
             backgroundColor: bgColor || 'transparent',
             width: `${width}px`,
@@ -201,7 +198,7 @@ const Canvas = () => {
           className='font-bold text-white text-center w-full  px-8 py-24 overflow-auto outline-none border-none resize-none'
           onChange={(e) => {
             setText(e.target.value)
-            autoResize()
+            // autoResize()
           }}
         />
       </div>

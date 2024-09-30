@@ -57,7 +57,7 @@ const FontFamilySelector = ({ onSelect }) => {
               <li
                 key={index}
                 onClick={() => handleFontSelectChange(font)}
-                className='p-2 cursor-pointer hover:bg-gray-100'
+                className='p-2 cursor-pointer hover:bg-opacity-90 bg-black text-white'
               >
                 {font.label}
               </li>
