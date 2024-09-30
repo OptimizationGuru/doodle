@@ -36,9 +36,6 @@ const Canvas = () => {
   const handleImgUpload = (e) => {
     uploadImage(e)
   }
-  // const autoResize = () => {
-  //   resizeTextArea('textarea')
-  // }
 
   const toggleTextColorPicker = () => {
     showTextShadePicker(!textShadePicker)
@@ -90,10 +87,6 @@ const Canvas = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
-
-  // useEffect(() => {
-  //   autoResize()
-  // }, [text])
 
   return (
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>

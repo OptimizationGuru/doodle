@@ -30,6 +30,9 @@ const BannerSizeSelector = ({ onSelect }) => {
       setDropdownOpen(false)
     }
   }
+  useEffect(() => {
+    handleSelectChange(screenSizes[1])
+  }, [])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
