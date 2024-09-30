@@ -6,7 +6,7 @@ const App = () => {
   return (
     <BannerStyle>
       <div className='bg-[#121212] flex items-center justify-center -py-4 min-h-screen'>
-        <div className='relative'>
+        <div className='relative w-full'>
           <Canvas />
         </div>
       </div>

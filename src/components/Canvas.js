@@ -2,24 +2,30 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import Dropdown from './Dropdown'
 import { BiSolidColorFill, MdOutlinePhotoSizeSelectActual, LuUploadCloud } from '../utils/icons'
 import Fonts from '../Fonts'
-import { allFontSizes } from '../constant'
 import { BannerStyleContext } from './BannerStyle'
-import { downloadCanvas, downloadDOMImage, downloadPngImage } from '../utils/downloadCanvas'
+import { downloadDOMImage } from '../utils/downloadCanvas'
 import { uploadImage } from '../utils/imageUpload'
 import { resizeTextArea } from '../utils/resizeTextArea'
 import FontColorPicker from '../utils/FontColorPicker'
 import BgShadePicker from '../utils/BgColorPicker'
-import YourComponent from './TextComponent'
+import BannerSizeSelector from './BannerSizeSelector'
+import FontSizeSelector from './fontSizeSelector'
+import FontStyleSelector from './FontStyleSelector'
+import { BsCloudDownload } from 'react-icons/bs'
+import FontFamilySelector from './FontFamilySelector'
 
 const Canvas = () => {
   const [text, setText] = useState('Write your content here')
-  const [width, setWidth] = useState(700)
-  const [height, setHeight] = useState(400)
-  const [fonts, setFonts] = useState([])
+  const [width, setWidth] = useState()
+  const [height, setHeight] = useState()
+  const [currentFamilyFont, setCurrentFamilyFont] = useState([])
+  const [textSize, setTextSize] = useState('24')
   const [bgShadePicker, showBgShadePicker] = useState(false)
   const [textShadePicker, showTextShadePicker] = useState(false)
+  const [refresh, setRefresh] = useState(0)
 
-  const { fontSize, fontStyle, fontColor, bgColor } = useContext(BannerStyleContext)
+  const { fontSize, fontStyle, fontColor, familyFont, bgColor, toggleStyle } =
+    useContext(BannerStyleContext)
 
   const bgPickerRef = useRef(null)
   const textPickerRef = useRef(null)
@@ -52,6 +58,33 @@ const Canvas = () => {
       showBgShadePicker(false)
       showTextShadePicker(false)
     }
+    if (bgPickerRef.current && !bgPickerRef.current.contains(e.target)) {
+      showBgShadePicker(false)
+    }
+    if (textPickerRef.current && !textPickerRef.current.contains(e.target)) {
+      showTextShadePicker(false)
+    }
+  }
+
+  const handleBannerSizeSelect = (width, height) => {
+    setHeight(height)
+    setWidth(width)
+  }
+  const handleFontSizeSelect = (fontSize) => {
+    setTextSize(fontSize)
+    toggleStyle({ size: fontSize })
+  }
+
+  const handleFontStyleSelect = (style) => {
+    toggleStyle({ style: style })
+  }
+
+  const handleFontFamilySelect = (newfamily) => {
+    console.log(familyFont, 'prev')
+    setCurrentFamilyFont(newfamily)
+    toggleStyle({ family: newfamily })
+    setRefresh((prev) => ++prev)
+    console.log(familyFont, 'updated')
   }
 
   useEffect(() => {
@@ -62,146 +95,116 @@ const Canvas = () => {
   }, [])
 
   useEffect(() => {
-    const fetchFonts = async () => {
-      try {
-        const result = await Fonts()
-        setFonts(result)
-      } catch (error) {
-        console.error('Error fetching fonts:', error)
-      }
-    }
-
-    fetchFonts()
-  }, [])
-
-  useEffect(() => {
     autoResize()
   }, [text])
 
   return (
-    <div className='bg-[#121212] flex flex-col  items-center gap-2'>
-      <div className='w-[600px] h-[50px] flex justify-center items-center py-1 gap-9'>
-        <div className='w-[100px] h-[50px] flex justify-center gap-0 py-2'>
-          <div className='h-full w-[100px]'>
-            <label className='border-black text-md bg-white border-[1px] w-[100px] shadow-sm p-2 h-full items-center justify-center'>
-              width
-            </label>
+    <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
+      <div className='w-[60%] h-auto flex justify-center items-center mt-12 py-1  border-white border-[1px] gap-2'>
+        <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
+          <div className='w-full h-[auto] relative' ref={textPickerRef}>
+            <button
+              onClick={toggleTextColorPicker}
+              className='text-white text-lg font-medium py-2 px-4  shadow-xl rounded-md border-white border-[1px] h-full bg-black'
+            >
+              A
+            </button>
+            {textShadePicker && (
+              <div className='mt-4 absolute'>
+                <FontColorPicker />
+              </div>
+            )}
           </div>
-          <div className='h-full w-[100px]'>
-            <input
-              className='p-[5px] -mt-2 w-[100px] border-black border-[1px]'
-              type='number'
-              onChange={(e) => setWidth(e.target.value)}
-              value={width}
-            />
-          </div>
-        </div>
-        <div className='w-[100px] h-[50px] flex justify-start gap-0 py-2'>
-          <div className='h-full w-[100px]'>
-            <label className='border-black text-md bg-white border-[1px] w-[100px] shadow-sm p-2'>
-              height
-            </label>
-          </div>
-          <div className='h-full w-[100px]'>
-            <input
-              className='p-[5px] -mt-2 w-[100px] border-black border-[1px]'
-              type='number'
-              onChange={(e) => setHeight(e.target.value)}
-              value={height}
-            />
-          </div>
-        </div>
-      </div>
 
-      <div className='w-[600px] h-[50px] flex justify-center items-center py-1 gap-4'>
-        <div
-          className='h-[40px] w-[50px] -mt-2 relative'
-          onClick={toggleTextColorPicker}
-          ref={textPickerRef}
-        >
-          <button className='text-white text-lg font-medium shadow-xl px-3 rounded-md border-white border-[1px] h-full bg-black'>
-            A
-          </button>
-          {textShadePicker && (
-            <div className='mt-4 absolute'>
-              <FontColorPicker />
+          <div className='w-full h-[auto]  relative' ref={bgPickerRef}>
+            <button
+              onClick={toggleBgColorPicker}
+              className='text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black'
+            >
+              <BiSolidColorFill />
+            </button>
+
+            {bgShadePicker && (
+              <div className='mt-4 absolute' onClick={toggleBgColorPicker}>
+                <BgShadePicker />
+              </div>
+            )}
+          </div>
+
+          <div className='w-full h-[auto] relative'>
+            <div>
+              <input
+                type='file'
+                onChange={(e) => handleImgUpload(e)}
+                className='text-white absolute inset-0 opacity-0 cursor-pointer'
+              />
             </div>
-          )}
-        </div>
-
-        <div className='w-[200px] h-[50px] flex justify-start rounded-none py-2 -mt-1'>
-          {fonts && <Dropdown width={200} data={fonts} type={'Choose font-style'} />}
-        </div>
-
-        <div className='w-[200px] h-[50px] flex justify-start rounded-none py-2 -mt-1'>
-          {fonts && <Dropdown width={200} data={allFontSizes} type={'Choose font-size'} />}
-        </div>
-
-        <div className='h-[40px] w-[100px] -mt-2 -mr-1 relative'>
-          <div>
-            <input
-              type='file'
-              onChange={(e) => handleImgUpload(e)}
-              className='text-white absolute inset-0 opacity-0 cursor-pointer'
-            />
+            <button className='text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black'>
+              <LuUploadCloud />
+            </button>
           </div>
-          <button className='text-white text-2xl font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'>
-            <LuUploadCloud />
-          </button>
+
+          <div className='w-full h-[auto]'>
+            <button className='text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black'>
+              <MdOutlinePhotoSizeSelectActual />
+            </button>
+          </div>
         </div>
 
-        <div className='h-[40px] w-[100px] -mt-2 -mx-1 relative' ref={bgPickerRef}>
+        <div className='w-full h-[auto] flex justify-center py-2'>
+          <FontSizeSelector onSelect={handleFontSizeSelect} />
+        </div>
+
+        <div className='w-full h-[auto] flex justify-center py-2'>
+          <FontStyleSelector onSelect={handleFontStyleSelect} />
+        </div>
+
+        <div className='w-full h-[auto] flex justify-center py-2'>
+          <FontFamilySelector onSelect={handleFontFamilySelect} />
+        </div>
+
+        <div className='w-full h-[auto] flex justify-center py-2'>
+          <BannerSizeSelector onSelect={handleBannerSizeSelect} />
+        </div>
+
+        <div className='w-full h-[auto] flex justify-center py-2 mr-2'>
           <button
-            onClick={toggleBgColorPicker}
-            className='text-white text-2xl font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'
+            onClick={handleImgDownload}
+            className='text-white  flex gap-2  my-2  py-2 px-3 rounded-md border-white border-[1px]  bg-black'
           >
-            <BiSolidColorFill />
-          </button>
-
-          {bgShadePicker && (
-            <div className='mt-4 absolute' onClick={toggleBgColorPicker}>
-              <BgShadePicker />
-            </div>
-          )}
-        </div>
-
-        <div className='h-[40px] w-[100px] -mt-2 -ml-1'>
-          <button className='text-white text-2xl font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'>
-            <MdOutlinePhotoSizeSelectActual />
+            <span>Download</span>{' '}
+            <span className='my-1'>
+              <BsCloudDownload />
+            </span>
           </button>
         </div>
       </div>
 
       <div
         id='canvas-container'
-        className=' flex items-center justify-center overflow-auto'
-        style={{ width: `${width}px`, height: `${height}px` }}
+        className='flex items-center justify-center overflow-auto w-full h-full  border-white border-[1px]'
+        style={{ width: width ? `${width}px` : '700px', height: height ? `${height}px` : '700px' }}
       >
         <textarea
           id='textarea'
+          key={refresh}
           value={text}
           style={{
-            fontSize: `${fontSize || 16}px`,
-            fontFamily: fontStyle || 'Arial',
+            fontSize: `${fontSize}`,
+            fontStyle: fontStyle,
+            fontfamily: 'sans-serif',
             color: fontColor || '#000000',
             backgroundColor: bgColor || 'transparent',
             width: `${width}px`,
             height: `${height}px`,
           }}
-          className='font-bold text-white text-center px-8 py-24 overflow-auto outline-none border-none resize-none bg-red-500'
+          className='font-bold text-white text-center w-full  px-8 py-24 overflow-auto outline-none border-none resize-none'
           onChange={(e) => {
             setText(e.target.value)
             autoResize()
           }}
         />
       </div>
-
-      <button
-        onClick={handleImgDownload}
-        className='text-white text-2xl my-2 font-medium shadow-xl py-1 px-3 rounded-md border-white border-[1px] h-full bg-black'
-      >
-        Download
-      </button>
     </div>
   )
 }
