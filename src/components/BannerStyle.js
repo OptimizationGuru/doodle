@@ -10,7 +10,7 @@ const BannerStyle = ({ children }) => {
   const [bgColor, setBgColor] = useState('white')
 
   const toggleStyle = ({ size, style, family, textColor, newBgColor }) => {
-    // console.log(family, 'family')
+    // console.log(size, 'size')
 
     if (size) setFontSize(size)
     if (family) setFontFamily(family)

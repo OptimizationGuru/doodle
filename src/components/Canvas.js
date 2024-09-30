@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import Dropdown from './Dropdown'
 import { BiSolidColorFill, MdOutlinePhotoSizeSelectActual, LuUploadCloud } from '../utils/icons'
-import Fonts from '../Fonts'
 import { BannerStyleContext } from './BannerStyle'
 import { downloadDOMImage } from '../utils/downloadCanvas'
 import { uploadImage } from '../utils/imageUpload'
-import { resizeTextArea } from '../utils/resizeTextArea'
 import FontColorPicker from '../utils/FontColorPicker'
 import BgShadePicker from '../utils/BgColorPicker'
 import BannerSizeSelector from './BannerSizeSelector'
@@ -18,8 +15,15 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { SiCanva } from 'react-icons/si'
 import ImageSizeSelector from './ImageSizeSelector'
 import InputBox from './ImgCategory'
+import TextOverlay from './TextOverlay'
 
 const Canvas = () => {
+  const [textImage, setTextImage] = useState('Your text here')
+  const [ImagefontColor, setImageFontColor] = useState('#ffffff')
+  const [bgOpacity, setOpacityImgText] = useState(1)
+  const widthImg = 842
+  const heightImg = 595
+
   const [text, setText] = useState('Write your content here')
   const [width, setWidth] = useState()
   const [height, setHeight] = useState()
@@ -27,10 +31,8 @@ const Canvas = () => {
   const [galleryImages, setGalleryImages] = useState([])
   const [showGallery, setShowGallery] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
-  const [imgCategory, setImgCategory] = useState('happy')
+  const [imgCategory, setImgCategory] = useState('fun')
   const [opacity, setOpacity] = useState(1)
-
-  const [textSize, setTextSize] = useState('24')
   const [imgUrls, setImgUrls] = useState([])
   const [bgShadePicker, showBgShadePicker] = useState(false)
   const [textShadePicker, showTextShadePicker] = useState(false)
@@ -41,6 +43,14 @@ const Canvas = () => {
 
   const { fontSize, fontStyle, fontColor, familyFont, bgColor, toggleStyle } =
     useContext(BannerStyleContext)
+
+  const handleColorChange = (e) => {
+    toggleStyle({ textColor: e.target.value })
+  }
+
+  const handleOpacityChange = (e) => {
+    setOpacityImgText(e.target.value)
+  }
 
   const handleImgDownload = () => {
     downloadDOMImage('canvas-container')
@@ -89,9 +99,8 @@ const Canvas = () => {
     setImgUrls(src)
   }
 
-  const handleFontSizeSelect = (fontSize) => {
-    setTextSize(fontSize)
-    toggleStyle({ size: fontSize })
+  const handleFontSizeSelect = (textSize) => {
+    toggleStyle({ size: textSize })
   }
 
   const handleFontStyleSelect = (style) => {
@@ -261,10 +270,10 @@ const Canvas = () => {
 
       <div
         id='canvas-container'
-        className='flex items-center justify-center overflow-auto w-full h-full'
+        className='flex items-center justify-center overflow-auto w-full h-full border-white border-[1px]'
         style={{
-          width: !selectedImage && width ? `${width}px` : '842px',
-          height: !selectedImage && height ? `${height}px` : '595px',
+          width: !selectedImage && width ? `${width}px` : 'auto',
+          height: !selectedImage && height ? `${height}px` : 'auto',
         }}
       >
         {!showGallery ? (
@@ -278,28 +287,34 @@ const Canvas = () => {
               fontStyle: fontStyle,
               color: fontColor || '#000000',
               backgroundColor: bgColor || 'transparent',
-              width: `${width}px`,
-              height: `${height}px`,
+              width: '100%',
+              height: '100%',
             }}
-            className='font-bold text-white text-center w-full  px-8 py-24  outline-none border-none resize-none'
+            className='font-bold text-white text-center outline-none border-none resize-none'
             onChange={(e) => setText(e.target.value)}
           />
         ) : (
-          <div className='flex flex-col items-center relative'>
+          <div className='flex flex-col w-full h-full items-center relative'>
             {selectedImage && (
-              <div className='w-full flex justify-center'>
-                <img
-                  id='resizable-image'
-                  src={selectedImage}
-                  alt='Selected'
-                  style={{ width: `${width}px`, height: `${height}px`, opacity: opacity }}
-                  className='object-contain'
+              <div className='flex flex-col items-center justify-center w-full h-full p-4'>
+                <TextOverlay
+                  bgImage={selectedImage}
+                  text={text}
+                  setText={setText}
+                  textColor={fontColor}
+                  textSize={fontSize}
+                  textStyle={fontStyle}
+                  bgOpacity={1}
+                  textOpacity={opacity}
+                  width={width}
+                  height={height}
                 />
               </div>
             )}
           </div>
         )}
       </div>
+
       {showGallery && (
         <div className='overflow-x-auto flex gap-2 mt-4'>
           {galleryImages.map((image) => (
@@ -313,6 +328,7 @@ const Canvas = () => {
           ))}
         </div>
       )}
+
       {showGallery && (
         <div className='overflow-x-auto flex gap-8 mt-4'>
           <span className='text-white w-[30px] '>
