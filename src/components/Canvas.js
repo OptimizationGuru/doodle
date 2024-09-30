@@ -13,22 +13,34 @@ import FontSizeSelector from './FontSizeSelector'
 import FontStyleSelector from './FontStyleSelector'
 import { BsCloudDownload } from 'react-icons/bs'
 import FontFamilySelector from './FontFamilySelector'
+import { fetchPexelsImages } from '../resources/PexelsPhotos'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { SiCanva } from 'react-icons/si'
+import ImageSizeSelector from './ImageSizeSelector'
+import InputBox from './ImgCategory'
 
 const Canvas = () => {
   const [text, setText] = useState('Write your content here')
   const [width, setWidth] = useState()
   const [height, setHeight] = useState()
   const [currentFamilyFont, setCurrentFamilyFont] = useState([])
+  const [galleryImages, setGalleryImages] = useState([])
+  const [showGallery, setShowGallery] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [imgCategory, setImgCategory] = useState('happy')
+  const [opacity, setOpacity] = useState(1)
+
   const [textSize, setTextSize] = useState('24')
+  const [imgUrls, setImgUrls] = useState([])
   const [bgShadePicker, showBgShadePicker] = useState(false)
   const [textShadePicker, showTextShadePicker] = useState(false)
+  const [pageNumber, setPageNumber] = useState(0)
   const [refresh, setRefresh] = useState(0)
+  const bgPickerRef = useRef(null)
+  const textPickerRef = useRef(null)
 
   const { fontSize, fontStyle, fontColor, familyFont, bgColor, toggleStyle } =
     useContext(BannerStyleContext)
-
-  const bgPickerRef = useRef(null)
-  const textPickerRef = useRef(null)
 
   const handleImgDownload = () => {
     downloadDOMImage('canvas-container')
@@ -67,6 +79,16 @@ const Canvas = () => {
     setHeight(height)
     setWidth(width)
   }
+
+  const handleImgSizeSelect = (url) => {
+    setSelectedImage(url)
+  }
+
+  const fixSelectedImage = (src) => {
+    setSelectedImage(src.large)
+    setImgUrls(src)
+  }
+
   const handleFontSizeSelect = (fontSize) => {
     setTextSize(fontSize)
     toggleStyle({ size: fontSize })
@@ -80,6 +102,31 @@ const Canvas = () => {
     setCurrentFamilyFont(font)
     toggleStyle({ family: font })
   }
+  const changeCategorySubmit = (category) => {
+    setImgCategory(category)
+  }
+
+  const handlePreviousPage = () => {
+    if (pageNumber === 0) setPageNumber(1)
+    if (pageNumber > 1) setPageNumber(pageNumber - 1)
+  }
+  const handleNextPage = () => {
+    if (pageNumber >= 1) setPageNumber(pageNumber + 1)
+  }
+
+  const togglePage = async (direction) => {
+    if (direction === 'next') handleNextPage()
+    if (direction === 'prev') handlePreviousPage()
+
+    if (direction === 'gallery') {
+      const images = await fetchPexelsImages(imgCategory, 1)
+      setPageNumber(1)
+      setShowGallery(true)
+    }
+    if (direction === 'canvas') {
+      setShowGallery(false)
+    }
+  }
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -88,9 +135,15 @@ const Canvas = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (pageNumber !== 0) {
+      fetchPexelsImages(imgCategory, pageNumber).then((data) => setGalleryImages(data.photos))
+    }
+  }, [pageNumber, imgCategory])
+
   return (
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
-      <div className='w-[65%] h-auto flex justify-center items-center mt-12 py-1  border-white border-[1px] gap-2'>
+      <div className='w-[90%] h-auto flex justify-center items-center mt-12 py-1  border-white border-[1px] gap-2'>
         <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
           <div className='w-full h-[auto] relative' ref={textPickerRef}>
             <button
@@ -135,9 +188,22 @@ const Canvas = () => {
           </div>
 
           <div className='w-full h-[auto]'>
-            <button className='text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black'>
-              <MdOutlinePhotoSizeSelectActual />
-            </button>
+            {!showGallery && (
+              <button
+                onClick={() => togglePage('gallery')}
+                className='text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black'
+              >
+                <MdOutlinePhotoSizeSelectActual />
+              </button>
+            )}
+            {showGallery && (
+              <button
+                onClick={() => togglePage('canvas')}
+                className='text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black'
+              >
+                <SiCanva />
+              </button>
+            )}
           </div>
         </div>
 
@@ -154,7 +220,14 @@ const Canvas = () => {
         </div>
 
         <div className='w-full h-[auto] flex justify-center py-2'>
-          <BannerSizeSelector onSelect={handleBannerSizeSelect} />
+          {!showGallery && <BannerSizeSelector onSelect={handleBannerSizeSelect} />}
+          {imgUrls && showGallery && (
+            <ImageSizeSelector imageSizeUrls={imgUrls} onSelect={handleImgSizeSelect} />
+          )}
+        </div>
+        <div className='w-full h-[auto] flex justify-center py-2'>
+          {imgUrls && showGallery && <InputBox onCategorySubmit={changeCategorySubmit} />}
+          InputBox
         </div>
 
         <div className='w-full h-[auto] flex justify-center py-2 mr-2'>
@@ -170,31 +243,99 @@ const Canvas = () => {
         </div>
       </div>
 
+      {selectedImage && (
+        <div className='flex flex-col items-center relative'>
+          <div className='justify-items-end'>
+            <input
+              type='range'
+              min='0'
+              max='1'
+              step='0.01'
+              value={opacity}
+              onChange={(e) => setOpacity(e.target.value)}
+              className='mt-2'
+            />
+          </div>
+        </div>
+      )}
+
       <div
         id='canvas-container'
-        className='flex items-center justify-center overflow-auto w-full h-full  '
-        style={{ width: width ? `${width}px` : '842px', height: height ? `${height}px` : '595px' }}
+        className='flex items-center justify-center overflow-auto w-full h-full'
+        style={{
+          width: !selectedImage && width ? `${width}px` : '842px',
+          height: !selectedImage && height ? `${height}px` : '595px',
+        }}
       >
-        <textarea
-          id='textarea'
-          key={refresh}
-          value={text}
-          style={{
-            fontFamily: 'ABeeZee',
-            fontSize: `${fontSize}`,
-            fontStyle: fontStyle,
-            color: fontColor || '#000000',
-            backgroundColor: bgColor || 'transparent',
-            width: `${width}px`,
-            height: `${height}px`,
-          }}
-          className='font-bold text-white text-center w-full  px-8 py-24 overflow-auto outline-none border-none resize-none'
-          onChange={(e) => {
-            setText(e.target.value)
-            // autoResize()
-          }}
-        />
+        {!showGallery ? (
+          <textarea
+            id='textarea'
+            key={refresh}
+            value={text}
+            style={{
+              fontFamily: 'ABeeZee',
+              fontSize: `${fontSize}`,
+              fontStyle: fontStyle,
+              color: fontColor || '#000000',
+              backgroundColor: bgColor || 'transparent',
+              width: `${width}px`,
+              height: `${height}px`,
+            }}
+            className='font-bold text-white text-center w-full  px-8 py-24  outline-none border-none resize-none'
+            onChange={(e) => setText(e.target.value)}
+          />
+        ) : (
+          <div className='flex flex-col items-center relative'>
+            {selectedImage && (
+              <div className='w-full flex justify-center'>
+                <img
+                  id='resizable-image'
+                  src={selectedImage}
+                  alt='Selected'
+                  style={{ width: `${width}px`, height: `${height}px`, opacity: opacity }}
+                  className='object-contain'
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
+      {showGallery && (
+        <div className='overflow-x-auto flex gap-2 mt-4'>
+          {galleryImages.map((image) => (
+            <img
+              key={image.id}
+              src={image.src.small}
+              alt='Gallery'
+              className='w-28 h-28 cursor-pointer'
+              onClick={() => fixSelectedImage(image.src)}
+            />
+          ))}
+        </div>
+      )}
+      {showGallery && (
+        <div className='overflow-x-auto flex gap-8 mt-4'>
+          <span className='text-white w-[30px] '>
+            <button
+              onClick={() => togglePage('prev')}
+              disabled={pageNumber === 1}
+              className={`text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black ${
+                pageNumber === 1 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              <FaChevronLeft size={20} />{' '}
+            </button>
+          </span>
+          <span className='text-white'>
+            <button
+              onClick={() => togglePage('next')}
+              className={`text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black `}
+            >
+              <FaChevronRight size={20} />
+            </button>
+          </span>
+        </div>
+      )}
     </div>
   )
 }
