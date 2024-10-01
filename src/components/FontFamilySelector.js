@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { API_KEY } from '../constant'
 import { font_url } from '../constant'
 
@@ -10,15 +10,19 @@ const FontFamilySelector = ({ onSelect }) => {
 
   useEffect(() => {
     const fetchFonts = async () => {
-      const response = await fetch(font_url + API_KEY)
-      const data = await response.json()
-      const families = data.items.map((item) => ({
-        label: item.family,
-        value: item.family,
-      }))
-      setFontFamilies(families)
+      try {
+        const response = await fetch(`${font_url}${API_KEY}`)
+        const data = await response.json()
+        const families = data.items.map((item, index) => ({
+          id: index,
+          label: item.family,
+          value: item.family,
+        }))
+        setFontFamilies(families)
+      } catch (error) {
+        console.error('Error fetching fonts:', error)
+      }
     }
-
     fetchFonts()
   }, [])
 
@@ -35,9 +39,10 @@ const FontFamilySelector = ({ onSelect }) => {
   }
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
+    const handleDocumentClick = (event) => handleClickOutside(event)
+    document.addEventListener('mousedown', handleDocumentClick)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('mousedown', handleDocumentClick)
     }
   }, [])
 
@@ -53,9 +58,9 @@ const FontFamilySelector = ({ onSelect }) => {
       {dropdownOpen && (
         <div className='absolute mt-2 bg-white border shadow-lg w-full z-10'>
           <ul className='max-h-60 overflow-y-auto'>
-            {fontFamilies.map((font, index) => (
+            {fontFamilies.map((font) => (
               <li
-                key={index}
+                key={font.id}
                 onClick={() => handleFontSelectChange(font)}
                 className='p-2 cursor-pointer hover:bg-opacity-90 bg-black text-white'
               >

@@ -6,14 +6,14 @@ const ImageSizeSelector = ({ imageSizeUrls, onSelect }) => {
   const dropdownRef = useRef(null)
 
   const sizes = [
-    { label: 'Large', url: imageSizeUrls?.large },
-    { label: 'Large2X', url: imageSizeUrls?.large2x },
-    { label: 'Medium', url: imageSizeUrls?.medium },
-    { label: 'Original', url: imageSizeUrls?.original },
-    { label: 'Small', url: imageSizeUrls?.small },
-    { label: 'Portrait', url: imageSizeUrls?.portrait },
-    { label: 'Landscape', url: imageSizeUrls?.landscape },
-    { label: 'Tiny', url: imageSizeUrls?.tiny },
+    { id: 1, label: 'Large', url: imageSizeUrls?.large },
+    { id: 2, label: 'Large2X', url: imageSizeUrls?.large2x },
+    { id: 3, label: 'Medium', url: imageSizeUrls?.medium },
+    { id: 4, label: 'Original', url: imageSizeUrls?.original },
+    { id: 5, label: 'Small', url: imageSizeUrls?.small },
+    { id: 6, label: 'Portrait', url: imageSizeUrls?.portrait },
+    { id: 7, label: 'Landscape', url: imageSizeUrls?.landscape },
+    { id: 8, label: 'Tiny', url: imageSizeUrls?.tiny },
   ]
 
   const handleSelectChange = (size) => {
@@ -47,15 +47,15 @@ const ImageSizeSelector = ({ imageSizeUrls, onSelect }) => {
         onClick={() => setDropdownOpen((prev) => !prev)}
         className='border p-2 rounded w-[150px] bg-black text-white'
       >
-        {selectedSize ? selectedSize.label : 'Image Size'}
+        {selectedSize ? selectedSize.label : 'Image Layout'}
       </button>
 
       {dropdownOpen && (
         <div className='absolute mt-2 bg-white border shadow-lg w-full z-10'>
           <ul className='max-h-60 overflow-y-auto'>
-            {sizes.map((size, index) => (
+            {sizes.map((size) => (
               <li
-                key={index}
+                key={size.id}
                 onClick={() => handleSelectChange(size)}
                 className='p-2 cursor-pointer bg-black text-white hover:bg-opacity-85'
               >

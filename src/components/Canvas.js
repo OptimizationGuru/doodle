@@ -11,41 +11,34 @@ import FontStyleSelector from './FontStyleSelector'
 import { BsCloudDownload } from 'react-icons/bs'
 import FontFamilySelector from './FontFamilySelector'
 import { fetchPexelsImages } from '../resources/PexelsPhotos'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaChevronLeft, FaChevronRight, FaGithub } from 'react-icons/fa'
 import { SiCanva } from 'react-icons/si'
 import ImageSizeSelector from './ImageSizeSelector'
 import InputBox from './ImgCategory'
 import TextOverlay from './TextOverlay'
+import { display_msg, display_sorry_msg, github_repo_link } from '../constant'
 
 const Canvas = () => {
   const [textEntered, setTextEntered] = useState(false)
+  const [displayText, setDisplayText] = useState(display_msg)
   const [text, setText] = useState('Your ideas, your canvas, your creation..!')
   const [width, setWidth] = useState()
   const [height, setHeight] = useState()
   const [currentFamilyFont, setCurrentFamilyFont] = useState([])
   const [galleryImages, setGalleryImages] = useState([])
-  const [showGallery, setShowGallery] = useState(false)
+  const [showGallery, setShowGallery] = useState(true)
   const [selectedImage, setSelectedImage] = useState(null)
-  const [imgCategory, setImgCategory] = useState('fun')
+  const [imgCategory, setImgCategory] = useState('Mountains')
   const [opacity, setOpacity] = useState(0.5)
   const [imgUrls, setImgUrls] = useState([])
   const [bgShadePicker, showBgShadePicker] = useState(false)
   const [textShadePicker, showTextShadePicker] = useState(false)
-  const [pageNumber, setPageNumber] = useState(0)
+  const [pageNumber, setPageNumber] = useState(1)
   const [refresh, setRefresh] = useState(0)
   const bgPickerRef = useRef(null)
   const textPickerRef = useRef(null)
 
-  const { fontSize, fontStyle, fontColor, familyFont, bgColor, toggleStyle } =
-    useContext(BannerStyleContext)
-
-  const handleColorChange = (e) => {
-    toggleStyle({ textColor: e.target.value })
-  }
-
-  const handleOpacityChange = (e) => {
-    setOpacityImgText(e.target.value)
-  }
+  const { fontSize, fontStyle, fontColor, bgColor, toggleStyle } = useContext(BannerStyleContext)
 
   const handleImgDownload = () => {
     downloadDOMImage('canvas-container')
@@ -142,15 +135,17 @@ const Canvas = () => {
 
   useEffect(() => {
     if (pageNumber !== 0) {
-      fetchPexelsImages(imgCategory, pageNumber).then((data) => setGalleryImages(data.photos))
+      fetchPexelsImages(imgCategory, pageNumber).then((data) => {
+        setGalleryImages(data.photos)
+      })
     }
-  }, [pageNumber, imgCategory])
+  }, [pageNumber, imgCategory, galleryImages])
 
   return (
-    <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
+    <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]  overflow-y-hidden'>
       <div
-        className={`h-auto flex justify-center items-center mt-12 py-1 border-white border-[1px] gap-2 ${
-          showGallery ? 'w-[85%]' : 'w-[68%]'
+        className={`fixed top-0 z-20  right-0 bg-black h-auto flex justify-center items-center py-1 border-white border-[1px] gap-2 ${
+          showGallery ? 'w-[90%] left-[6%]' : 'w-[75%] left-[12%]'
         }`}
       >
         <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
@@ -168,8 +163,8 @@ const Canvas = () => {
               </div>
             )}
           </div>
-          {/* Bg Color Selector */}
 
+          {/* Bg Color Selector */}
           <div className='w-full h-[auto]  relative' ref={bgPickerRef}>
             <button
               onClick={toggleBgColorPicker}
@@ -184,6 +179,7 @@ const Canvas = () => {
               </div>
             )}
           </div>
+
           {/* File Upload Selector Selector */}
           <div className='w-full h-[auto] relative'>
             <div>
@@ -218,6 +214,7 @@ const Canvas = () => {
             )}
           </div>
         </div>
+
         {/* Font Size Selector */}
         <div className='w-full h-[auto] flex justify-center py-2'>
           <FontSizeSelector onSelect={handleFontSizeSelect} />
@@ -236,12 +233,11 @@ const Canvas = () => {
         {/*  Size Selectors */}
         <div className='w-full h-[auto] flex justify-center py-2'>
           {/*  Textarea Size Selector */}
-
-          {!showGallery && (
+          {
             <div className='w-full h-[auto] flex justify-center py-2'>
               <BannerSizeSelector onSelect={handleBannerSizeSelect} />
             </div>
-          )}
+          }
 
           {/*  Image Size Selector */}
           {imgUrls && showGallery && (
@@ -270,28 +266,42 @@ const Canvas = () => {
             </span>
           </button>
         </div>
+
+        {/* Github btn */}
+        <div className='w-full h-[auto] flex justify-center py-2 -ml-8'>
+          <a href={github_repo_link} target='_blank'>
+            <button className='text-white  flex gap-1 my-2   py-2 px-3  rounded-md border-white border-[1px]  bg-black'>
+              <span className='my-1'>
+                <FaGithub size={20} />
+              </span>
+            </button>
+          </a>
+        </div>
       </div>
 
-      {selectedImage && (
-        <div className='flex flex-col items-center relative'>
-          <label className='text-white text-lg'>Opacity</label>
-          <div className='justify-items-end'>
-            <input
-              type='range'
-              min='0'
-              max='1'
-              step='0.01'
-              value={opacity}
-              onChange={(e) => setOpacity(e.target.value)}
-              className='mt-2'
-            />
-          </div>
+      <div
+        className={`flex flex-col items-center  overflow-y-hidden relative ${
+          !selectedImage ? 'hidden' : ''
+        }`}
+        style={{ marginTop: '90px', zIndex: 5 }}
+      >
+        <label className='text-white text-lg'>Opacity</label>
+        <div className='justify-items-end'>
+          <input
+            type='range'
+            min='0'
+            max='1'
+            step='0.01'
+            value={opacity}
+            onChange={(e) => setOpacity(e.target.value)}
+            className='mt-2'
+          />
         </div>
-      )}
+      </div>
 
       <div
         id='canvas-container'
-        className='flex items-center justify-center overflow-auto w-full h-full '
+        className='flex items-center overflow-y-hidden justify-center overflow-auto w-full h-full'
         style={{
           width: !selectedImage && width ? `${width}px` : 'auto',
           height: !selectedImage && height ? `${height}px` : 'auto',
@@ -311,7 +321,7 @@ const Canvas = () => {
               width: '100%',
               height: '100%',
             }}
-            className={`font-bold text-white text-center outline-none border-none resize-none ${
+            className={`font-bold text-white text-center outline-none border-none resize-none mt-[300px] ${
               textEntered ? 'py-6' : 'py-[200px]'
             }`}
             onChange={(e) => {
@@ -323,8 +333,7 @@ const Canvas = () => {
             {!selectedImage && showGallery && (
               <div className=' p-4 rounded-lg shadow-md w-auto h-auto -my-[48]'>
                 <p className='text-white  text-center text-lg'>
-                  Choose your favourite image, you can search images by category in the toolbar
-                  above..!
+                  {galleryImages.length > 0 ? displayText : display_sorry_msg}
                 </p>
               </div>
             )}
@@ -369,7 +378,7 @@ const Canvas = () => {
               onClick={() => togglePage('prev')}
               disabled={pageNumber === 1}
               className={`text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black ${
-                pageNumber === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                galleryImages.length < 1 || pageNumber === 1 ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
               <FaChevronLeft size={20} />{' '}
@@ -378,7 +387,9 @@ const Canvas = () => {
           <span className='text-white'>
             <button
               onClick={() => togglePage('next')}
-              className={`text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black `}
+              className={`text-white text-2xl font-medium shadow-xl py-2 px-3 rounded-md border-white border-[1px] h-full bg-black ${
+                galleryImages.length < 10 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
               <FaChevronRight size={20} />
             </button>

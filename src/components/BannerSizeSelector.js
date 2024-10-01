@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 const screenSizes = [
-  { label: 'A4 (Portrait)', width: 595, height: 842 },
-  { label: 'A4 (Landscape)', width: 842, height: 595 },
-  { label: 'Instagram Story', width: 1080, height: 1920 },
-  { label: 'Square (Instagram Post)', width: 1080, height: 1080 },
-  { label: 'Facebook Cover', width: 820, height: 312 },
-  { label: 'Twitter Header', width: 1500, height: 500 },
-  { label: 'YouTube Thumbnail', width: 1280, height: 720 },
-  { label: 'LinkedIn Cover', width: 1584, height: 396 },
-  { label: 'Poster (18x24 inches)', width: 1728, height: 1152 },
-  { label: 'Letter (8.5x11 inches)', width: 612, height: 792 },
-  { label: 'Legal (8.5x14 inches)', width: 612, height: 1008 },
+  { id: 1, label: 'A4 Portrait', width: 595, height: 842 },
+  { id: 2, label: 'A4 Landscape', width: 842, height: 595 },
+  { id: 3, label: 'Instagram Story', width: 1080, height: 1920 },
+  { id: 4, label: 'Instagram Post', width: 1080, height: 1080 },
+  { id: 5, label: 'Facebook Cover', width: 820, height: 312 },
+  { id: 6, label: 'Twitter Header', width: 1500, height: 500 },
+  { id: 7, label: 'YouTube Thumbnail', width: 1280, height: 720 },
+  { id: 8, label: 'LinkedIn Cover', width: 1584, height: 396 },
+  { id: 9, label: 'Poster 18x24', width: 1728, height: 1152 },
+  { id: 10, label: 'Letter 8.5x11', width: 612, height: 792 },
+  { id: 11, label: 'Legal 8.5x14', width: 612, height: 1008 },
 ]
 
 const BannerSizeSelector = ({ onSelect }) => {
@@ -45,7 +45,7 @@ const BannerSizeSelector = ({ onSelect }) => {
     <div className='relative' ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
-        className='border p-2 rounded w-[150px]   bg-black text-white'
+        className='border p-2 rounded w-[150px] bg-black text-white'
       >
         {selectedSize ? selectedSize.label : 'Banner Size'}
       </button>
@@ -53,11 +53,11 @@ const BannerSizeSelector = ({ onSelect }) => {
       {dropdownOpen && (
         <div className='absolute mt-2 bg-white border shadow-lg w-full z-10'>
           <ul className='max-h-60 overflow-y-auto'>
-            {screenSizes.map((size, index) => (
+            {screenSizes.map((size) => (
               <li
-                key={index}
+                key={size.id}
                 onClick={() => handleSelectChange(size)}
-                className='p-2  cursor-pointer  bg-black text-white hover:bg-opacity-85'
+                className='p-2 cursor-pointer bg-black text-white hover:bg-opacity-85'
               >
                 {size.label}
               </li>

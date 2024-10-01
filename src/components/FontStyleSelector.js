@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 const fontStyles = [
-  { label: 'Normal', value: 'normal' },
-  { label: 'Italic', value: 'italic' },
-  { label: 'Oblique', value: 'oblique' },
+  { id: 1, label: 'Normal', value: 'normal' },
+  { id: 2, label: 'Italic', value: 'italic' },
+  { id: 3, label: 'Oblique', value: 'oblique' },
 ]
 
 const FontStyleSelector = ({ onSelect }) => {
@@ -34,7 +34,7 @@ const FontStyleSelector = ({ onSelect }) => {
     <div className='relative' ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
-        className='border p-2 w-[120px] rounded-md bg-black text-white '
+        className='border p-2 w-[120px] rounded-md bg-black text-white'
       >
         {selectedStyle ? selectedStyle.label : 'Font Style'}
       </button>
@@ -42,11 +42,11 @@ const FontStyleSelector = ({ onSelect }) => {
       {dropdownOpen && (
         <div className='absolute mt-2 bg-white border shadow-lg w-full z-10'>
           <ul className='max-h-60 overflow-y-auto'>
-            {fontStyles.map((style, index) => (
+            {fontStyles.map((style) => (
               <li
-                key={index}
+                key={style.id}
                 onClick={() => handleFontSelectChange(style)}
-                className='p-2 hover:bg-opacity-80 cursor-pointer  bg-black text-white'
+                className='p-2 hover:bg-opacity-80 cursor-pointer bg-black text-white'
               >
                 {style.label}
               </li>

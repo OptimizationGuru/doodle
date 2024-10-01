@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 const fontSizes = [
-  { label: 'Small (12px)', value: '12px' },
-  { label: 'Medium (16px)', value: '16px' },
-  { label: 'Large (20px)', value: '20px' },
-  { label: 'Extra Large (24px)', value: '24px' },
-  { label: '2XL (30px)', value: '30px' },
-  { label: '3XL (36px)', value: '36px' },
-  { label: '4XL (48px)', value: '48px' },
-  { label: '5XL (64px)', value: '64px' },
+  { id: 1, label: 'Small (12px)', value: '12px' },
+  { id: 2, label: 'Medium (16px)', value: '16px' },
+  { id: 3, label: 'Large (20px)', value: '20px' },
+  { id: 4, label: 'XL (24px)', value: '24px' },
+  { id: 5, label: '2XL (30px)', value: '30px' },
+  { id: 6, label: '3XL (36px)', value: '36px' },
+  { id: 7, label: '4XL (48px)', value: '48px' },
+  { id: 8, label: '5XL (64px)', value: '64px' },
 ]
 
 const FontSizeSelector = ({ onSelect }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [selectedSize, setSelectedSize] = useState({ label: '3XL (36px)', value: '36px' })
+  const [selectedSize, setSelectedSize] = useState(fontSizes[5])
   const dropdownRef = useRef(null)
 
   const handleFontSelectChange = (size) => {
@@ -39,19 +39,19 @@ const FontSizeSelector = ({ onSelect }) => {
     <div className='relative' ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
-        className='border p-2 rounded  w-[120px] bg-black text-white'
+        className='border p-2 rounded w-[120px] bg-black text-white'
       >
-        {selectedSize ? selectedSize.label : 'Font Size'}
+        {selectedSize.label}
       </button>
 
       {dropdownOpen && (
         <div className='absolute mt-2 bg-white border shadow-lg w-full z-10'>
           <ul className='max-h-60 overflow-y-auto'>
-            {fontSizes.map((size, index) => (
+            {fontSizes.map((size) => (
               <li
-                key={index}
+                key={size.id}
                 onClick={() => handleFontSelectChange(size)}
-                className='p-2  cursor-pointer  bg-black text-white hover:bg-opacity-80'
+                className='p-2 cursor-pointer bg-black text-white hover:bg-opacity-80'
               >
                 {size.label}
               </li>
