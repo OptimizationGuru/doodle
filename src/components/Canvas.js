@@ -11,7 +11,7 @@ import FontStyleSelector from './FontStyleSelector'
 import { BsCloudDownload } from 'react-icons/bs'
 import FontFamilySelector from './FontFamilySelector'
 import { fetchPexelsImages } from '../resources/PexelsPhotos'
-import { FaChevronLeft, FaChevronRight, FaGithub } from 'react-icons/fa'
+import { FaChevronLeft, FaChevronRight, FaDownload, FaGithub } from 'react-icons/fa'
 import { SiCanva } from 'react-icons/si'
 import ImageSizeSelector from './ImageSizeSelector'
 import InputBox from './ImgCategory'
@@ -145,7 +145,7 @@ const Canvas = () => {
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]  overflow-y-hidden'>
       <div
         className={`fixed top-0 z-20  right-0 bg-black h-auto flex justify-center items-center py-1 border-white border-[1px] gap-2 ${
-          showGallery ? 'w-[95%] left-[2%]' : 'w-[75%] left-[12%]'
+          showGallery ? 'w-[95%] left-[2.5%]' : 'w-[75%] left-[12%]'
         }`}
       >
         <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
@@ -255,27 +255,26 @@ const Canvas = () => {
         )}
 
         {/* Download btn */}
-        <div className='w-full h-[auto] flex justify-center py-2'>
-          <button
-            onClick={handleImgDownload}
-            className='text-white  flex gap-1 my-2  py-2 px-3 rounded-md border-white border-[1px]  bg-black'
-          >
-            <span>Download</span>{' '}
-            <span className='my-1'>
-              <BsCloudDownload />
-            </span>
-          </button>
-        </div>
-
-        {/* Github btn */}
-        <div className='w-full h-[auto] flex justify-center py-2 -ml-8'>
-          <a href={github_repo_link} target='_blank'>
-            <button className='text-white  flex gap-1 my-2   py-2 px-3  rounded-md border-white border-[1px]  bg-black'>
+        <div className='w-full h-[auto] flex gap-3 justify-center py-2'>
+          <div>
+            <button
+              onClick={handleImgDownload}
+              className='text-white  flex gap-2 my-2  py-2 px-3 rounded-md border-white border-[1px]  bg-black'
+            >
               <span className='my-1'>
-                <FaGithub size={20} />
+                <FaDownload size={20} />
               </span>
             </button>
-          </a>
+          </div>
+          <div>
+            <a href={github_repo_link} target='_blank'>
+              <button className='text-white  flex gap-1 my-2   py-2 px-3  rounded-md border-white border-[1px]  bg-black'>
+                <span className='my-1'>
+                  <FaGithub size={20} />
+                </span>
+              </button>
+            </a>
+          </div>
         </div>
       </div>
 
