@@ -27,7 +27,7 @@ const Canvas = () => {
   const [showGallery, setShowGallery] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [imgCategory, setImgCategory] = useState('fun')
-  const [opacity, setOpacity] = useState(0.2)
+  const [opacity, setOpacity] = useState(0.5)
   const [imgUrls, setImgUrls] = useState([])
   const [bgShadePicker, showBgShadePicker] = useState(false)
   const [textShadePicker, showTextShadePicker] = useState(false)
