@@ -322,10 +322,10 @@ const Canvas = () => {
         ) : (
           <div className='flex flex-col gap-4 w-full h-full item-center justify-center relative'>
             {!selectedImage && showGallery && (
-              <div className='bg-red-700 p-4 rounded-lg shadow-md w-auto h-auto -my-[48]'>
-                <p className='text-black  text-center text-lg'>
-                  Choose your favourite image, You can search images by category in the toolbar
-                  above
+              <div className=' p-4 rounded-lg shadow-md w-auto h-auto -my-[48]'>
+                <p className='text-white  text-center text-lg'>
+                  Choose your favourite image, you can search images by category in the toolbar
+                  above..!
                 </p>
               </div>
             )}
