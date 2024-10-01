@@ -155,7 +155,7 @@ const Canvas = () => {
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
       <div
         className={`h-auto flex justify-center items-center mt-12 py-1 border-white border-[1px] gap-2 ${
-          showGallery ? 'w-[75%]' : 'w-[60%]'
+          showGallery ? 'w-[78%]' : 'w-[63%]'
         }`}
       >
         <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
