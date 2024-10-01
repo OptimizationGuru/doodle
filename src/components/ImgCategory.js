@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BiSearch } from 'react-icons/bi' // Import the search icon
+import { BiSearch } from 'react-icons/bi'
 
 const InputBox = ({ onCategorySubmit }) => {
   const [category, setCategory] = useState('')

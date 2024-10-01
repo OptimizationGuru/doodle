@@ -1,4 +1,3 @@
-// Dropdown.js
 import React, { useContext, useState } from 'react'
 import { BannerStyleContext } from './BannerStyle'
 import { FaChevronDown } from 'react-icons/fa'

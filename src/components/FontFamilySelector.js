@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useEffect } from 'react'
-import { API_KEY } from '../constant' // Import your API key from constants
+import { API_KEY } from '../constant'
 import { font_url } from '../constant'
 
 const FontFamilySelector = ({ onSelect }) => {

@@ -18,7 +18,7 @@ const ImageSizeSelector = ({ imageSizeUrls, onSelect }) => {
 
   const handleSelectChange = (size) => {
     setSelectedSize(size)
-    onSelect(size.url) // Pass the selected size's URL to the parent component
+    onSelect(size.url)
     setDropdownOpen(false)
   }
 
@@ -29,7 +29,6 @@ const ImageSizeSelector = ({ imageSizeUrls, onSelect }) => {
   }
 
   useEffect(() => {
-    // Set default size to the first option
     if (sizes.length > 0) {
       handleSelectChange(sizes[0])
     }

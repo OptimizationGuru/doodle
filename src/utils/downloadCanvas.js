@@ -3,10 +3,10 @@ import { toPng } from 'html-to-image'
 import domtoimage from 'dom-to-image'
 
 export const downloadCanvas = (elementId) => {
-  const canvasElement = document.getElementById(elementId) // The div wrapping your canvas.
+  const canvasElement = document.getElementById(elementId)
   html2canvas(canvasElement, {
-    scale: 2, // Increases the quality of the image
-    useCORS: true, // Allow cross-origin images
+    scale: 2,
+    useCORS: true,
     allowTaint: false,
   }).then((canvas) => {
     const link = document.createElement('a')
@@ -31,10 +31,8 @@ export const downloadPngImage = (elementId) => {
     })
 }
 
-
-
 export const downloadDOMImage = (elementId) => {
-  const node = document.getElementById(elementId) // Ensure to use the correct ID
+  const node = document.getElementById(elementId)
 
   domtoimage
     .toPng(node)
