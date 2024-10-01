@@ -18,12 +18,7 @@ import InputBox from './ImgCategory'
 import TextOverlay from './TextOverlay'
 
 const Canvas = () => {
-  const [textImage, setTextImage] = useState('Your text here')
-  const [ImagefontColor, setImageFontColor] = useState('#ffffff')
-  const [bgOpacity, setOpacityImgText] = useState(1)
-  const widthImg = 842
-  const heightImg = 595
-
+  const [textEntered, setTextEntered] = useState(false)
   const [text, setText] = useState('Write your content here')
   const [width, setWidth] = useState()
   const [height, setHeight] = useState()
@@ -316,8 +311,12 @@ const Canvas = () => {
               width: '100%',
               height: '100%',
             }}
-            className='font-bold text-white text-center outline-none border-none resize-none'
-            onChange={(e) => setText(e.target.value)}
+            className={`font-bold text-white text-center outline-none border-none resize-none ${
+              textEntered ? 'py-6' : 'py-[200px]'
+            }`}
+            onChange={(e) => {
+              setText(e.target.value), setTextEntered(true)
+            }}
           />
         ) : (
           <div className='flex flex-col gap-4 w-full h-full item-center justify-center relative'>
