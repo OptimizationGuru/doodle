@@ -32,7 +32,7 @@ const Canvas = () => {
   const [showGallery, setShowGallery] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [imgCategory, setImgCategory] = useState('fun')
-  const [opacity, setOpacity] = useState(1)
+  const [opacity, setOpacity] = useState(0.2)
   const [imgUrls, setImgUrls] = useState([])
   const [bgShadePicker, showBgShadePicker] = useState(false)
   const [textShadePicker, showTextShadePicker] = useState(false)
@@ -229,14 +229,19 @@ const Canvas = () => {
         </div>
 
         <div className='w-full h-[auto] flex justify-center py-2'>
-          {!showGallery && <BannerSizeSelector onSelect={handleBannerSizeSelect} />}
+          {!showGallery && (
+            <div className='w-full h-[auto] flex justify-center py-2'>
+              <BannerSizeSelector onSelect={handleBannerSizeSelect} />
+            </div>
+          )}
           {imgUrls && showGallery && (
-            <ImageSizeSelector imageSizeUrls={imgUrls} onSelect={handleImgSizeSelect} />
+            <div className='w-full h-[auto] flex justify-center py-2'>
+              <ImageSizeSelector imageSizeUrls={imgUrls} onSelect={handleImgSizeSelect} />
+            </div>
           )}
         </div>
         <div className='w-full h-[auto] flex justify-center py-2'>
           {imgUrls && showGallery && <InputBox onCategorySubmit={changeCategorySubmit} />}
-          InputBox
         </div>
 
         <div className='w-full h-[auto] flex justify-center py-2 mr-2'>
@@ -254,6 +259,7 @@ const Canvas = () => {
 
       {selectedImage && (
         <div className='flex flex-col items-center relative'>
+          <label className='text-white text-lg'>Opacity</label>
           <div className='justify-items-end'>
             <input
               type='range'
