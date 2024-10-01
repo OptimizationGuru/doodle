@@ -13,7 +13,7 @@ const fontSizes = [
 
 const FontSizeSelector = ({ onSelect }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [selectedSize, setSelectedSize] = useState(null)
+  const [selectedSize, setSelectedSize] = useState({ label: '3XL (36px)', value: '36px' })
   const dropdownRef = useRef(null)
 
   const handleFontSelectChange = (size) => {

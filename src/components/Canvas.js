@@ -19,7 +19,7 @@ import TextOverlay from './TextOverlay'
 
 const Canvas = () => {
   const [textEntered, setTextEntered] = useState(false)
-  const [text, setText] = useState('Write your content here')
+  const [text, setText] = useState('Your ideas, your canvas, your creation..!')
   const [width, setWidth] = useState()
   const [height, setHeight] = useState()
   const [currentFamilyFont, setCurrentFamilyFont] = useState([])
