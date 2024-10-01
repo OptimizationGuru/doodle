@@ -47,7 +47,7 @@ const FontFamilySelector = ({ onSelect }) => {
         onClick={() => setDropdownOpen((prev) => !prev)}
         className='border p-2 rounded w-[150px] bg-black text-white'
       >
-        {selectedFontFamily ? selectedFontFamily.label : 'Font Style'}
+        {selectedFontFamily ? selectedFontFamily.label : 'Font Family'}
       </button>
 
       {dropdownOpen && (

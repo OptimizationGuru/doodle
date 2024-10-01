@@ -134,6 +134,7 @@ const Canvas = () => {
     }
     if (direction === 'canvas') {
       setShowGallery(false)
+      setSelectedImage(false)
     }
   }
 
@@ -152,8 +153,13 @@ const Canvas = () => {
 
   return (
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
-      <div className='w-[90%] h-auto flex justify-center items-center mt-12 py-1  border-white border-[1px] gap-2'>
+      <div
+        className={`h-auto flex justify-center items-center mt-12 py-1 border-white border-[1px] gap-2 ${
+          showGallery ? 'w-[75%]' : 'w-[60%]'
+        }`}
+      >
         <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
+          {/* Font Color Selector */}
           <div className='w-full h-[auto] relative' ref={textPickerRef}>
             <button
               onClick={toggleTextColorPicker}
@@ -167,6 +173,7 @@ const Canvas = () => {
               </div>
             )}
           </div>
+          {/* Bg Color Selector */}
 
           <div className='w-full h-[auto]  relative' ref={bgPickerRef}>
             <button
@@ -182,7 +189,7 @@ const Canvas = () => {
               </div>
             )}
           </div>
-
+          {/* File Upload Selector Selector */}
           <div className='w-full h-[auto] relative'>
             <div>
               <input
@@ -196,6 +203,7 @@ const Canvas = () => {
             </button>
           </div>
 
+          {/* Toggler text/image Selector */}
           <div className='w-full h-[auto]'>
             {!showGallery && (
               <button
@@ -215,39 +223,51 @@ const Canvas = () => {
             )}
           </div>
         </div>
-
+        {/* Font Size Selector */}
         <div className='w-full h-[auto] flex justify-center py-2'>
           <FontSizeSelector onSelect={handleFontSizeSelect} />
         </div>
 
+        {/* Font Style Selector */}
         <div className='w-full h-[auto] flex justify-center py-2'>
           <FontStyleSelector onSelect={handleFontStyleSelect} />
         </div>
 
+        {/* Font Family Selector */}
         <div className='w-full h-[auto] flex justify-center py-2'>
           <FontFamilySelector onSelect={handleFontFamilySelect} />
         </div>
 
+        {/*  Size Selectors */}
         <div className='w-full h-[auto] flex justify-center py-2'>
+          {/*  Textarea Size Selector */}
+
           {!showGallery && (
             <div className='w-full h-[auto] flex justify-center py-2'>
               <BannerSizeSelector onSelect={handleBannerSizeSelect} />
             </div>
           )}
+
+          {/*  Image Size Selector */}
           {imgUrls && showGallery && (
-            <div className='w-full h-[auto] flex justify-center py-2'>
+            <div className='w-full h-[auto] flex justify-center py-2 mx-2'>
               <ImageSizeSelector imageSizeUrls={imgUrls} onSelect={handleImgSizeSelect} />
             </div>
           )}
         </div>
-        <div className='w-full h-[auto] flex justify-center py-2'>
-          {imgUrls && showGallery && <InputBox onCategorySubmit={changeCategorySubmit} />}
-        </div>
 
-        <div className='w-full h-[auto] flex justify-center py-2 mr-2'>
+        {/*  Search Image by Category */}
+        {imgUrls && showGallery && (
+          <div className='w-full h-[auto] flex justify-center py-2 mx-2'>
+            <InputBox onCategorySubmit={changeCategorySubmit} />
+          </div>
+        )}
+
+        {/* Download btn */}
+        <div className='w-full h-[auto] flex justify-center py-2'>
           <button
             onClick={handleImgDownload}
-            className='text-white  flex gap-2  my-2  py-2 px-3 rounded-md border-white border-[1px]  bg-black'
+            className='text-white  flex gap-1 my-2  py-2 px-3 rounded-md border-white border-[1px]  bg-black'
           >
             <span>Download</span>{' '}
             <span className='my-1'>
@@ -300,7 +320,15 @@ const Canvas = () => {
             onChange={(e) => setText(e.target.value)}
           />
         ) : (
-          <div className='flex flex-col w-full h-full items-center relative'>
+          <div className='flex flex-col gap-4 w-full h-full item-center justify-center relative'>
+            {!selectedImage && showGallery && (
+              <div className='bg-red-700 p-4 rounded-lg shadow-md w-auto h-auto'>
+                <p className='text-black justify-center text-center text-lg'>
+                  Choose your favourite image, You can search images by category in the toolbar
+                  above
+                </p>
+              </div>
+            )}
             {selectedImage && (
               <div className='flex flex-col items-center justify-center w-full h-full p-4'>
                 <TextOverlay

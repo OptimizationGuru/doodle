@@ -22,7 +22,7 @@ const InputBox = ({ onCategorySubmit }) => {
         type='text'
         value={category}
         onChange={handleInputChange}
-        placeholder='Enter category'
+        placeholder='Search by category'
         className='bg-black text-white border border-white rounded p-2 w-[180px]'
       />
       <button
