@@ -155,7 +155,7 @@ const Canvas = () => {
     <div className='w-full h-full pb-[35px] min-h-screen bg-[#121212] flex flex-col  justify-center items-center gap-2  border-[1px]'>
       <div
         className={`h-auto flex justify-center items-center mt-12 py-1 border-white border-[1px] gap-2 ${
-          showGallery ? 'w-[78%]' : 'w-[63%]'
+          showGallery ? 'w-[85%]' : 'w-[68%]'
         }`}
       >
         <div className='w-full h-[auto] flex justify-center items-center py-2 px-2 mx-2 gap-3'>
@@ -322,8 +322,8 @@ const Canvas = () => {
         ) : (
           <div className='flex flex-col gap-4 w-full h-full item-center justify-center relative'>
             {!selectedImage && showGallery && (
-              <div className='bg-red-700 p-4 rounded-lg shadow-md w-auto h-auto'>
-                <p className='text-black justify-center text-center text-lg'>
+              <div className='bg-red-700 p-4 rounded-lg shadow-md w-auto h-auto -my-[48]'>
+                <p className='text-black  text-center text-lg'>
                   Choose your favourite image, You can search images by category in the toolbar
                   above
                 </p>
