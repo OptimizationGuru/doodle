@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const TextOverlay = ({
   bgImage,
@@ -14,6 +14,12 @@ const TextOverlay = ({
 }) => {
   const textRef = useRef(null)
 
+  const [textEnteredImg, setTextEnteredImg] = useState(true)
+
+  useEffect(() => {
+    setTextEnteredImg(!textEnteredImg)
+  }, [text])
+
   useEffect(() => {
     if (textRef.current) textRef.current.style.color = textColor
   }, [textColor])
@@ -26,6 +32,7 @@ const TextOverlay = ({
         height: `${height}px`,
       }}
     >
+      {/* Background with opacity */}
       <div
         style={{
           backgroundImage: `url(${bgImage})`,
@@ -39,20 +46,14 @@ const TextOverlay = ({
         }}
       />
 
-      <div
-        className='absolute w-full h-full'
-        style={{
-          backgroundColor: `rgba(0, 0, 0, ${0.5})`,
-          opacity: 1,
-          pointerEvents: 'none',
-        }}
-      />
-
+      {/* Text area with independent opacity */}
       <textarea
         ref={textRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className='absolute text-center outline-none border-none resize-none w-full h-full px-2 py-2'
+        className={`absolute text-center outline-none border-none resize-none w-full h-full px-2 ${
+          textEnteredImg ? 'py-[50px]' : 'py-[250px]'
+        }`}
         style={{
           fontFamily: 'ABeeZee',
           fontStyle: textStyle,
