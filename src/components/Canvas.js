@@ -270,7 +270,7 @@ const Canvas = () => {
 
       <div
         id='canvas-container'
-        className='flex items-center justify-center overflow-auto w-full h-full border-white border-[1px]'
+        className='flex items-center justify-center overflow-auto w-full h-full '
         style={{
           width: !selectedImage && width ? `${width}px` : 'auto',
           height: !selectedImage && height ? `${height}px` : 'auto',
