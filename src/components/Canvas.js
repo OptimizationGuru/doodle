@@ -306,7 +306,7 @@ const Canvas = () => {
               </div>
             )}
             {selectedImage && (
-              <div className='flex flex-col items-center justify-center w-full h-full px-4 py-2  xs:mt-[270px] sm:mt-[100px] md:mt-[150px] lg:mt-[150px] xl:mt-[130px] 2xl:mt-[100px]'>
+              <div className='flex flex-col items-center justify-center w-full h-full px-4 py-2  xs:mt-[270px] sm:mt-[100px] md:mt-[150px] lg:mt-[150px] xl:mt-[130px] 2xl:mt-[50px]'>
                 <TextOverlay
                   bgImage={selectedImage}
                   text={text}
