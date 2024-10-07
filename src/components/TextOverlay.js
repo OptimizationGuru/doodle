@@ -22,6 +22,7 @@ const TextOverlay = ({
 
   return (
     <div
+      id='canvas-container'
       className='relative flex justify-center items-center'
       style={{
         width: `${width}px`,
