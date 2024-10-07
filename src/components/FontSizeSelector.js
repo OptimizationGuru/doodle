@@ -39,7 +39,7 @@ const FontSizeSelector = ({ onSelect }) => {
     <div className='relative' ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
-        className='border p-2 rounded w-[120px] bg-black text-white'
+        className='border p-2 rounded w-[130px] bg-black text-white'
       >
         {selectedSize.label}
       </button>

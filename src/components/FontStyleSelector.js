@@ -34,7 +34,7 @@ const FontStyleSelector = ({ onSelect }) => {
     <div className='relative' ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
-        className='border p-2 w-[120px] rounded-md bg-black text-white'
+        className='border p-2 w-[100px] rounded-md bg-black text-white'
       >
         {selectedStyle ? selectedStyle.label : 'Font Style'}
       </button>

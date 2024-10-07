@@ -10,7 +10,7 @@ const FontColorPicker = () => {
     setTextShade(color)
     toggleStyle({ textColor: color })
   }
-  return <HexColorPicker color={textShade} onChange={setProperty} />
+  return <HexColorPicker color={textShade} onChange={setProperty} className='py-1' />
 }
 
 export default FontColorPicker

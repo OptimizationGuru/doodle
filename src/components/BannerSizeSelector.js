@@ -51,7 +51,7 @@ const BannerSizeSelector = ({ onSelect }) => {
       </button>
 
       {dropdownOpen && (
-        <div className='absolute mt-2 bg-white border shadow-lg w-full z-10'>
+        <div className='absolute mt-2 bg-white border shadow-lg w-full z-40'>
           <ul className='max-h-60 overflow-y-auto'>
             {screenSizes.map((size) => (
               <li

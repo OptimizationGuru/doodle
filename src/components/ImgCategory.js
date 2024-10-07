@@ -17,13 +17,13 @@ const InputBox = ({ onCategorySubmit }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='flex gap-2 '>
+    <form onSubmit={handleSubmit} className='flex gap-1 '>
       <input
         type='text'
         value={category}
         onChange={handleInputChange}
         placeholder='Search Image...'
-        className='bg-black text-white border border-white rounded p-2 w-[180px]'
+        className='bg-black text-white border border-white rounded p-2  w-[190px]'
       />
       <button
         type='submit'
